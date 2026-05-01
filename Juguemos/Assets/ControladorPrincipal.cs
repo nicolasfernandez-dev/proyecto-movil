@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class ControladorPrincipal : MonoBehaviour
 {
-    public float velocidad = 5f;
+    public float velocidad = 4f;
+    public float fuerzaSalto = 7f;
 
     private Rigidbody2D rb;
+    private bool estabaPulsando = false;
 
     void Start()
     {
@@ -13,23 +17,35 @@ public class ControladorPrincipal : MonoBehaviour
 
     void Update()
     {
-        if(Input.GetMouseButton(0)) //el 0 indica el click izquierdo, 1 = click derecho, 2 = boton central(rueda ratón)
+        bool pulsandoAhora = Input.GetMouseButton(0);
+
+        if(pulsandoAhora && !estabaPulsando) //el 0 indica el click izquierdo, 1 = click derecho, 2 = boton central(rueda ratón)
         {
             float mitadPantalla = Screen.width / 2f;
+            float direccionX = Input.mousePosition.x > mitadPantalla ? 1f : -1f; //variable = condicion ? valor_si_true : valor_si_false
 
-            if(Input.mousePosition.x > mitadPantalla){
-            rb.linearVelocity = new Vector2(velocidad, rb.linearVelocity.y);
-            }
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
 
-            else
-            {
-                rb.linearVelocity = new Vector2(-velocidad, rb.linearVelocity.y);
-            }
+            rb.AddForce(new Vector2(direccionX * velocidad, fuerzaSalto), ForceMode2D.Impulse);
         }
 
-        else
+        estabaPulsando = pulsandoAhora;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("LimiteMuerte"))
         {
-            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y); //el cuadrado se queda quieto
+            morir();
         }
     }
+
+    void morir()
+    {
+        Debug.Log("Has muerto!");
+
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().name);
+    }
+
 }
