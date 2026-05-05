@@ -28,11 +28,13 @@ public class ControladorPrincipal : MonoBehaviour
             float mitadPantalla = Screen.width / 2f;
             direccionX = Input.mousePosition.x > mitadPantalla ? 1f : -1f; //variable = condicion ? valor_si_true : valor_si_false
             juegoIniciado = true;
+
         }
 
         if (juegoIniciado)
         {
             rb.linearVelocity = new Vector2(direccionX * velocidad, rb.linearVelocity.y);
+            rb.angularVelocity = 100f;
         }
 
         if (juegoIniciado && pulsandoAhora && !estabaPulsando)
