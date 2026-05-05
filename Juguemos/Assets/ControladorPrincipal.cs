@@ -11,11 +11,13 @@ public class ControladorPrincipal : MonoBehaviour
     private bool estabaPulsando = false;
     private bool juegoIniciado = false;
     private float direccionX = 0f;
+    private GestorPinchos gestorPinchos;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0f;
+        gestorPinchos = FindObjectOfType<GestorPinchos>();
     }
 
     void Update()
@@ -25,8 +27,8 @@ public class ControladorPrincipal : MonoBehaviour
         if(!juegoIniciado && pulsandoAhora && !estabaPulsando) 
         {
             rb.gravityScale = 1f;
-            float mitadPantalla = Screen.width / 2f;
-            direccionX = Input.mousePosition.x > mitadPantalla ? 1f : -1f; //variable = condicion ? valor_si_true : valor_si_false
+            //float mitadPantalla = Screen.width / 2f; de momento no lo uso
+            direccionX = 1f; //variable = condicion ? valor_si_true : valor_si_false
             juegoIniciado = true;
 
         }
@@ -56,9 +58,19 @@ public class ControladorPrincipal : MonoBehaviour
         if (collision.gameObject.CompareTag("LimiteLateral"))
         {
             direccionX *= -1f;
+            gestorPinchos.CambiarPinchos(direccionX);
+        }
+
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Pincho"))
+        {
+            morir();
         }
     }
 
+      
     void morir()
     {
         Debug.Log("Has muerto!");

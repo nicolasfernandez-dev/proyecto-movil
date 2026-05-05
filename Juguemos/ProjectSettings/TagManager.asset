@@ -6,6 +6,7 @@ TagManager:
   tags:
   - LimiteMuerte
   - LimiteLateral
+  - Pincho
   layers:
   - Default
   - TransparentFX
