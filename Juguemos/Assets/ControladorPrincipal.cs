@@ -12,10 +12,12 @@ public class ControladorPrincipal : MonoBehaviour
     private bool juegoIniciado = false;
     private float direccionX = 0f;
     private GestorPinchos gestorPinchos;
+    [SerializeField] private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
         rb.gravityScale = 0f;
         gestorPinchos = FindObjectOfType<GestorPinchos>();
     }
@@ -41,6 +43,7 @@ public class ControladorPrincipal : MonoBehaviour
 
         if (juegoIniciado && pulsandoAhora && !estabaPulsando)
         {
+            animator.SetTrigger("jump");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
             rb.AddForce(new Vector2(0f, fuerzaSalto), ForceMode2D.Impulse);
         }
