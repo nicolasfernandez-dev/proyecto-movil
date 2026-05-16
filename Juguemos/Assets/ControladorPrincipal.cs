@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class ControladorPrincipal : MonoBehaviour
 {
     public float velocidad = 4f;
-    public float fuerzaSalto = 7f;
+    public float fuerzaSalto = 6f;
 
     private Rigidbody2D rb;
     private bool estabaPulsando = false;
