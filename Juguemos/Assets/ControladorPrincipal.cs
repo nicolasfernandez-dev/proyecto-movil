@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class ControladorPrincipal : MonoBehaviour
 {
-    public float velocidad = 4f;
+    public float velocidad = 3f;
     public float fuerzaSalto = 6f;
 
     private Rigidbody2D rb;
