@@ -19,7 +19,7 @@ public class ControladorPrincipal : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         rb.gravityScale = 0f;
-        gestorPinchos = FindObjectOfType<GestorPinchos>();
+        gestorPinchos = FindAnyObjectByType<GestorPinchos>();
     }
 
     void Update()
@@ -81,5 +81,5 @@ public class ControladorPrincipal : MonoBehaviour
         SceneManager.LoadScene(
             SceneManager.GetActiveScene().name);
     }
-
+    
 }

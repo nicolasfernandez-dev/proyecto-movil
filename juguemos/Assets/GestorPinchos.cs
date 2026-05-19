@@ -6,7 +6,7 @@ public class GestorPinchos : MonoBehaviour
     public GameObject pinchoPrefab;       // arrastra el prefab aquí en el Inspector
     public Transform paredIzquierda;      // arrastra ParedIzquierda aquí
     public Transform paredDerecha;        // arrastra ParedDerecha aquí
-    public int cantidadPinchos = 3;       // cuántos pinchos aparecen cada vez
+    public int cantidadPinchos = 4;       // cuántos pinchos aparecen cada vez
 
     private List<GameObject> pinchosActivos = new List<GameObject>();
 
@@ -32,23 +32,54 @@ public class GestorPinchos : MonoBehaviour
 
     void MostrarPinchos(Transform pared)
     {
-        float alturaMin = -5f;
-        float alturaMax = 5f;
+        float alturaMin = -4.5f;
+        float alturaMax = 4.5f;
+        float separacionMinima = 1f;
+        int intentosMaximos = 100; // evitamos un bucle infinito, si intentamos demasiadas veces sin éxito, se salta ese pincho
 
-        // Desplazamiento hacia el interior según qué pared es
         bool esParedDerecha = pared == paredDerecha;
-        float offsetX = esParedDerecha ? -0.65f : 0.65f; // desplaza el pincho hacia dentro
-        float rotacionZ = esParedDerecha ? 90f : -90f;  // rota el triángulo hacia dentro
+        float offsetX = esParedDerecha ? -0.65f : 0.65f;
+        float rotacionZ = esParedDerecha ? 90f : -90f;
+
+        List<float> posicionesY = new List<float>();
 
         for (int i = 0; i < cantidadPinchos; i++)
         {
-            float y = Random.Range(alturaMin, alturaMax);
+            float y = 0f;
+            bool encontrado = false;
+
+            for (int intento = 0; intento < intentosMaximos; intento++)
+            {
+                float candidata = Random.Range(alturaMin, alturaMax);
+                bool solapado = false;
+
+                foreach (float posicionExistente in posicionesY)
+                {
+                    if (Mathf.Abs(posicionExistente - candidata) < separacionMinima)
+                    {
+                        solapado = true;
+                        break;
+                    }
+                }
+
+                if (!solapado)
+                {
+                    y = candidata;
+                    encontrado = true;
+                    break;
+                }
+            }
+
+            if (!encontrado)
+            {
+                Debug.LogWarning("No se encontró posición libre para el pincho " + i);
+                continue; // se salta este pincho en vez de colgarse
+            }
+
+            posicionesY.Add(y);
             Vector3 posicion = new Vector3(pared.position.x + offsetX, y, 0f);
             Quaternion rotacion = Quaternion.Euler(0f, 0f, rotacionZ);
-
-            GameObject pincho = Instantiate(pinchoPrefab, posicion, rotacion);
-            pinchosActivos.Add(pincho);
+            pinchosActivos.Add(Instantiate(pinchoPrefab, posicion, rotacion));
         }
-
     }
 }

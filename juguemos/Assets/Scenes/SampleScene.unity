@@ -991,7 +991,7 @@ MonoBehaviour:
   pinchoPrefab: {fileID: 4473777512834435741, guid: 285fd581222c54707a2ddd7efbfea077, type: 3}
   paredIzquierda: {fileID: 1006770095}
   paredDerecha: {fileID: 1637384239}
-  cantidadPinchos: 3
+  cantidadPinchos: 5
 --- !u!4 &1665364218
 Transform:
   m_ObjectHideFlags: 0
