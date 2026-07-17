@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 public class ControladorPrincipal : MonoBehaviour
 {
     public float velocidad = 3f;
-    public float fuerzaSalto = 6f;
+    public float fuerzaSalto = 4f;
 
     private Rigidbody2D rb;
     private bool estabaPulsando = false;
@@ -26,7 +26,7 @@ public class ControladorPrincipal : MonoBehaviour
     {
         bool pulsandoAhora = Input.GetMouseButton(0); //el 0 indica el click izquierdo, 1 = click derecho, 2 = boton central(rueda ratón)
 
-        if(!juegoIniciado && pulsandoAhora && !estabaPulsando) 
+        if (!juegoIniciado && pulsandoAhora && !estabaPulsando)
         {
             rb.gravityScale = 1f;
             //float mitadPantalla = Screen.width / 2f; de momento no lo uso
@@ -72,8 +72,6 @@ public class ControladorPrincipal : MonoBehaviour
             morir();
         }
     }
-
-      
     void morir()
     {
         Debug.Log("Has muerto!");
@@ -81,5 +79,5 @@ public class ControladorPrincipal : MonoBehaviour
         SceneManager.LoadScene(
             SceneManager.GetActiveScene().name);
     }
-    
+
 }

@@ -34,7 +34,7 @@ public class GestorPinchos : MonoBehaviour
     {
         float alturaMin = -4.5f;
         float alturaMax = 4.5f;
-        float separacionMinima = 1f;
+        float separacionMinima = 2f;
         int intentosMaximos = 100; // evitamos un bucle infinito, si intentamos demasiadas veces sin éxito, se salta ese pincho
 
         bool esParedDerecha = pared == paredDerecha;
