@@ -3,59 +3,69 @@ using System.Collections.Generic;
 
 public class GestorPinchos : MonoBehaviour
 {
-    public GameObject pinchoPrefab;       // arrastra el prefab aquí en el Inspector
-    public Transform paredIzquierda;      // arrastra ParedIzquierda aquí
-    public Transform paredDerecha;        // arrastra ParedDerecha aquí
-    public int cantidadPinchos = 4;       // cuántos pinchos aparecen cada vez
+    [SerializeField] private GameObject pinchoPrefab;       // arrastra el prefab aquí en el Inspector
+    [SerializeField] private Transform paredIzquierda;      // arrastra ParedIzquierda aquí
+    [SerializeField] private Transform paredDerecha;        // arrastra ParedDerecha aquí
+    [SerializeField] private int cantidadPinchos = 4;       // cuántos pinchos aparecen cada vez
 
-    private List<GameObject> pinchosActivos = new List<GameObject>();
+    private List<GameObject> poolPinchos = new List<GameObject>();
 
     void Start()
     {
+        InicializarPool();
         // Al inicio mostramos pinchos en la pared derecha (dirección inicial por defecto)
-        MostrarPinchos(paredDerecha);
+        CambiarPinchos(1f);
+    }
+
+    private void InicializarPool()
+    {
+        int cantidadTotal = 6;
+
+        for (int i = 0; i < cantidadTotal; i++)
+        {
+            GameObject nuevoPincho = Instantiate(pinchoPrefab);
+            nuevoPincho.SetActive(false); // Nacen apagados
+            poolPinchos.Add(nuevoPincho);
+        }
     }
 
     public void CambiarPinchos(float direccionX)
     {
-        // Esconde los pinchos actuales
-        foreach (GameObject p in pinchosActivos)
-        {
-            Destroy(p);
-        }
-        pinchosActivos.Clear();
+        DesactivarPinchosActivos();
 
-        // Muestra pinchos en la pared hacia donde se dirige el cuadrado
         Transform paredObjetivo = direccionX > 0 ? paredDerecha : paredIzquierda;
-        MostrarPinchos(paredObjetivo);
+        List<float> posicionesY = CalcularPosicionesAleatorias();
+        ActivarPinchosEnPared(paredObjetivo, posicionesY);
     }
 
-    void MostrarPinchos(Transform pared)
+    private void DesactivarPinchosActivos()
     {
+        foreach (GameObject p in poolPinchos)
+        {
+            p.SetActive(false);
+        }
+    }
+
+
+    private List<float> CalcularPosicionesAleatorias()
+    {
+        List<float> posicionesGeneradas = new List<float>();
         float alturaMin = -4.5f;
         float alturaMax = 4.5f;
         float separacionMinima = 2f;
-        int intentosMaximos = 100; // evitamos un bucle infinito, si intentamos demasiadas veces sin éxito, se salta ese pincho
-
-        bool esParedDerecha = pared == paredDerecha;
-        float offsetX = esParedDerecha ? -0.65f : 0.65f;
-        float rotacionZ = esParedDerecha ? 90f : -90f;
-
-        List<float> posicionesY = new List<float>();
+        int intentosMaximos = 100;
 
         for (int i = 0; i < cantidadPinchos; i++)
         {
-            float y = 0f;
-            bool encontrado = false;
-
             for (int intento = 0; intento < intentosMaximos; intento++)
             {
                 float candidata = Random.Range(alturaMin, alturaMax);
                 bool solapado = false;
 
-                foreach (float posicionExistente in posicionesY)
+                // Comprobamos la distancia contra las posiciones ya aprobadas
+                foreach (float posExistente in posicionesGeneradas)
                 {
-                    if (Mathf.Abs(posicionExistente - candidata) < separacionMinima)
+                    if (Mathf.Abs(posExistente - candidata) < separacionMinima)
                     {
                         solapado = true;
                         break;
@@ -64,22 +74,49 @@ public class GestorPinchos : MonoBehaviour
 
                 if (!solapado)
                 {
-                    y = candidata;
-                    encontrado = true;
-                    break;
+                    posicionesGeneradas.Add(candidata);
+                    break; // Salimos del bucle de intentos porque ya tenemos una válida
                 }
             }
-
-            if (!encontrado)
-            {
-                Debug.LogWarning("No se encontró posición libre para el pincho " + i);
-                continue; // se salta este pincho en vez de colgarse
-            }
-
-            posicionesY.Add(y);
-            Vector3 posicion = new Vector3(pared.position.x + offsetX, y, 0f);
-            Quaternion rotacion = Quaternion.Euler(0f, 0f, rotacionZ);
-            pinchosActivos.Add(Instantiate(pinchoPrefab, posicion, rotacion));
         }
+
+        return posicionesGeneradas;
+    }
+
+
+    private void ActivarPinchosEnPared(Transform pared, List<float> posicionesY)
+    {
+        bool esParedDerecha = pared == paredDerecha;
+        float offsetX = esParedDerecha ? -0.65f : 0.65f;
+        float rotacionZ = esParedDerecha ? 90f : -90f;
+
+        foreach (float y in posicionesY)
+        {
+            GameObject pinchoLibre = ObtenerPinchoInactivo();
+
+            if (pinchoLibre != null)
+            {
+                // Sobreescribimos sus transformadas (Posición y Rotación)
+                Vector3 nuevaPosicion = new Vector3(pared.position.x + offsetX, y, 0f);
+                pinchoLibre.transform.position = nuevaPosicion;
+                pinchoLibre.transform.rotation = Quaternion.Euler(0f, 0f, rotacionZ);
+
+                // Lo mostramos en pantalla
+                pinchoLibre.SetActive(true);
+            }
+        }
+    }
+
+    private GameObject ObtenerPinchoInactivo()
+    {
+        foreach (GameObject p in poolPinchos)
+        {
+            if (!p.activeInHierarchy)
+            {
+                return p;
+            }
+        }
+
+        return null; // Si llegamos aquí, nos hemos quedado sin pinchos en el Pool
     }
 }

@@ -25,13 +25,17 @@ public class ControladorPrincipal : MonoBehaviour
     void Update()
     {
         bool pulsandoAhora = Input.GetMouseButton(0); //el 0 indica el click izquierdo, 1 = click derecho, 2 = boton central(rueda ratón)
+        bool tapNuevo = pulsandoAhora && !estabaPulsando;
 
-        if (!juegoIniciado && pulsandoAhora && !estabaPulsando)
+        if (!juegoIniciado && tapNuevo)
         {
             rb.gravityScale = 1f;
             //float mitadPantalla = Screen.width / 2f; de momento no lo uso
             direccionX = 1f; //variable = condicion ? valor_si_true : valor_si_false
             juegoIniciado = true;
+
+            estabaPulsando = pulsandoAhora;
+            return;
 
         }
 
@@ -41,7 +45,7 @@ public class ControladorPrincipal : MonoBehaviour
             rb.angularVelocity = 100f;
         }
 
-        if (juegoIniciado && pulsandoAhora && !estabaPulsando)
+        if (juegoIniciado && tapNuevo)
         {
             animator.SetTrigger("jump");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
