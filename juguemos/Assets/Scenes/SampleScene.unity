@@ -155,6 +155,7 @@ MonoBehaviour:
   velocidad: 4
   fuerzaSalto: 7
   gestorPinchos: {fileID: 1665364217}
+  gestorPuntuacion: {fileID: 0}
   animator: {fileID: 0}
 --- !u!212 &143896273
 SpriteRenderer:
@@ -970,6 +971,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1665364218}
   - component: {fileID: 1665364217}
+  - component: {fileID: 1665364219}
   m_Layer: 0
   m_Name: GestorJuego
   m_TagString: Untagged
@@ -1008,6 +1010,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1665364219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665364216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b7e83f0290a4201b467282624dfcdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GestorPuntuacion
 --- !u!1 &1767323377
 GameObject:
   m_ObjectHideFlags: 0

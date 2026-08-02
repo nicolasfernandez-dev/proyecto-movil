@@ -7,6 +7,7 @@ public class ControladorPrincipal : MonoBehaviour
     [SerializeField] private float velocidad = 3f;
     [SerializeField] private float fuerzaSalto = 4f;
     [SerializeField] private GestorPinchos gestorPinchos;
+    [SerializeField] private GestorPuntuacion gestorPuntuacion;
     [SerializeField] private Animator animator;
 
     private Rigidbody2D rb;
@@ -88,6 +89,8 @@ public class ControladorPrincipal : MonoBehaviour
         {
             direccionX *= -1f;
             gestorPinchos.CambiarPinchos(direccionX);
+
+            gestorPuntuacion.SumarPunto();
         }
 
     }
