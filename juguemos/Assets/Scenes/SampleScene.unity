@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ControladorPrincipal
   velocidad: 4
   fuerzaSalto: 7
+  gestorPinchos: {fileID: 1665364217}
   animator: {fileID: 0}
 --- !u!212 &143896273
 SpriteRenderer:
