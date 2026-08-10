@@ -8,6 +8,7 @@ public class ControladorPrincipal : MonoBehaviour
     [SerializeField] private float fuerzaSalto = 4f;
     [SerializeField] private GestorPinchos gestorPinchos;
     [SerializeField] private GestorPuntuacion gestorPuntuacion;
+    [SerializeField] private GestorGameOver gestorGameOver;
     [SerializeField] private Animator animator;
 
     private Rigidbody2D rb;
@@ -101,12 +102,18 @@ public class ControladorPrincipal : MonoBehaviour
             morir();
         }
     }
-    void morir()
+    private void morir()
     {
-        Debug.Log("Has muerto!");
+        // 1. Detenemos la física y la lógica del juego
+        juegoIniciado = false;
+        Time.timeScale = 0f; // Congela el juego al instante
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().name);
+        // 2. Le pedimos los datos al contable (GestorPuntuacion)
+        int puntosActuales = gestorPuntuacion.ObtenerPuntuacionActual();
+        int recordActual = gestorPuntuacion.ObtenerRecord();
+
+        // 3. Le pasamos los datos al gerente del Game Over para que muestre la pantalla
+        gestorGameOver.MostrarPantalla(puntosActuales, recordActual);
     }
 
 }
