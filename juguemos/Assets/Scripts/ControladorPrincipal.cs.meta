@@ -1,2 +1,17 @@
 fileFormatVersion: 2
 guid: d678e28d63050405cb1e373282cb4ab0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - gestorPinchos: {instanceID: 0}
+  - gestorPuntuacion: {instanceID: 0}
+  - gestorGameOver: {instanceID: 0}
+  - animator: {instanceID: 0}
+  - jugadorObjeto: {instanceID: 0}
+  - prefabExplosion: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

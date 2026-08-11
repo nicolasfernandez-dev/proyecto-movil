@@ -295,6 +295,8 @@ MonoBehaviour:
   gestorPuntuacion: {fileID: 1665364219}
   gestorGameOver: {fileID: 1665364220}
   animator: {fileID: 0}
+  jugadorObjeto: {fileID: 143896271}
+  prefabExplosion: {fileID: 1587791179047215631, guid: dc7c8c53a71c8427e98e21c3b70bc7d9, type: 3}
 --- !u!212 &143896273
 SpriteRenderer:
   serializedVersion: 2

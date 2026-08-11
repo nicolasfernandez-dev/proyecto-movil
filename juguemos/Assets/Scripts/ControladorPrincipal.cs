@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class ControladorPrincipal : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ControladorPrincipal : MonoBehaviour
     [SerializeField] private GestorPuntuacion gestorPuntuacion;
     [SerializeField] private GestorGameOver gestorGameOver;
     [SerializeField] private Animator animator;
+    [SerializeField] private GameObject jugadorObjeto;
+    [SerializeField] private GameObject prefabExplosion;
 
     private Rigidbody2D rb;
     private bool juegoIniciado = false;
@@ -104,15 +107,33 @@ public class ControladorPrincipal : MonoBehaviour
     }
     private void morir()
     {
-        // 1. Detenemos la física y la lógica del juego
-        juegoIniciado = false;
-        Time.timeScale = 0f; // Congela el juego al instante
+        // Si el juego ya está detenido, no hacemos nada (evita múltiples choques)
+        if (!juegoIniciado) return;
 
-        // 2. Le pedimos los datos al contable (GestorPuntuacion)
+        juegoIniciado = false;
+
+        // Iniciamos la secuencia de muerte en lugar de parar el tiempo de golpe
+        StartCoroutine(SecuenciaMuerte());
+    }
+
+    private IEnumerator SecuenciaMuerte()
+    {
+        // 1. Ocultar al jugador y desactivar sus colisiones para que no vuelva a chocar
+        jugadorObjeto.GetComponent<SpriteRenderer>().enabled = false;
+        jugadorObjeto.GetComponent<Collider2D>().enabled = false;
+        jugadorObjeto.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+        jugadorObjeto.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+
+        // 2. Instanciar la explosión exactamente donde estaba el jugador
+        Instantiate(prefabExplosion, jugadorObjeto.transform.position, Quaternion.identity);
+
+        // 3. Pausa dramática: dejamos que el juego corra durante 1.5 segundos
+        yield return new WaitForSeconds(1.5f);
+
+        // 4. Ahora sí, congelamos todo y sacamos la pantalla de Game Over
+        Time.timeScale = 0f;
         int puntosActuales = gestorPuntuacion.ObtenerPuntuacionActual();
         int recordActual = gestorPuntuacion.ObtenerRecord();
-
-        // 3. Le pasamos los datos al gerente del Game Over para que muestre la pantalla
         gestorGameOver.MostrarPantalla(puntosActuales, recordActual);
     }
 
