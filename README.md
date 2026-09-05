@@ -1,4 +1,4 @@
-#Jump Spikes 🚀
+# Jump Spikes 🚀
 
 Un juego arcade 2D rápido y adictivo desarrollado en Unity. La premisa es simple: salta, esquiva los obstáculos y sobrevive el mayor tiempo posible para batir tu récord personal.
 
